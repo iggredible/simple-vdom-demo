@@ -1,3 +1,5 @@
+import diff from "./diff";
+
 const app = document.querySelector("#app");
 
 const vAppStructure = num => {
@@ -53,11 +55,18 @@ const mount = ($nodeToReplace, $nodeTarget) => {
 };
 
 let num = 10;
-let $vApp = renderer(vAppStructure(num));
+let currentVApp = vAppStructure(num);
+let $vApp = renderer(currentVApp);
 let $rootElem = mount($vApp, app);
+let newVApp;
 
 setInterval(() => {
   num++;
-  let $newVApp = renderer(vAppStructure(num));
-  $rootElem = mount($newVApp, $rootElem);
+  newVApp = vAppStructure(num);
+  // let $newVApp = renderer(newVApp);
+  // $rootElem = mount($newVApp, $rootElem); // problem is, it is still mounting
+  const patch = diff(currentVApp, newVApp);
+  $rootElem = patch($rootElem);
+
+  currentVApp = newVApp;
 }, 1000);
