@@ -1,25 +1,27 @@
 const app = document.querySelector("#app");
 
-const vAppStructure = {
-  tagName: "ul",
-  text: "",
-  attrs: { class: "parent-class", id: "parent-id" },
-  children: [
-    {
-      tagName: "li",
-      attrs: "",
-      text: "list 1",
-      attrs: { class: "child-class" },
-      children: []
-    },
-    {
-      tagName: "li",
-      attrs: "",
-      text: "list 2",
-      attrs: { class: "child-class" },
-      children: []
-    }
-  ]
+const vAppStructure = num => {
+  return {
+    tagName: "ul",
+    text: "",
+    attrs: { class: "parent-class", id: `parent-id-${num}` },
+    children: [
+      {
+        tagName: "li",
+        attrs: "",
+        text: "list 1",
+        attrs: { class: "child-class" },
+        children: []
+      },
+      {
+        tagName: "li",
+        attrs: "",
+        text: "list 2",
+        attrs: { class: "child-class" },
+        children: [{ tagName: "input", attrs: "", text: "", children: [] }]
+      }
+    ]
+  };
 };
 
 const renderer = node => {
@@ -31,7 +33,6 @@ const renderer = node => {
   }
 
   if (text) {
-    console.log("text: ", text);
     const $text = document.createTextNode(text);
     $elem.appendChild($text);
   }
@@ -46,5 +47,17 @@ const renderer = node => {
   return $elem;
 };
 
-const $vApp = renderer(vAppStructure);
-app.replaceWith($vApp);
+const mount = ($nodeToReplace, $nodeTarget) => {
+  $nodeTarget.replaceWith($nodeToReplace);
+  return $nodeToReplace;
+};
+
+let num = 10;
+let $vApp = renderer(vAppStructure(num));
+let $rootElem = mount($vApp, app);
+
+setInterval(() => {
+  num++;
+  let $newVApp = renderer(vAppStructure(num));
+  $rootElem = mount($newVApp, $rootElem);
+}, 1000);
