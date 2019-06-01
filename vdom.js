@@ -64,7 +64,7 @@ setInterval(() => {
   num++;
   newVApp = vAppStructure(num);
   // let $newVApp = renderer(newVApp);
-  // $rootElem = mount($newVApp, $rootElem); // problem is, it is still mounting
+  // $rootElem = mount($newVApp, $rootElem); 
   const patch = diff(currentVApp, newVApp);
   $rootElem = patch($rootElem);
 
